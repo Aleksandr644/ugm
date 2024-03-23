@@ -1,4 +1,9 @@
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 
+csrf = CSRFProtect()
 app = Flask(__name__)
-from app import views
+app.config.from_object('config')
+csrf.init_app(app)
+
+from app import views # ! Обязательная строчка, без нее не подлкючаются виды
