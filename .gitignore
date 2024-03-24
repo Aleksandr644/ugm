@@ -4,3 +4,5 @@
 
 !.gitignore
 !.gitmodules
+db.ini
+**/db.ini
