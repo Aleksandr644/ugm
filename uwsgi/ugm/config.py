@@ -1,6 +1,9 @@
 import os
 from configparser import ConfigParser
 
+class Config(object):
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you_will_never-quess'
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 cfg = ConfigParser();
