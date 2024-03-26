@@ -1,14 +1,23 @@
 import os
+from configparser import ConfigParser
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = None
+cfg = ConfigParser();
+with open('db.ini') as fl:
+    cfg.read_file(fl)
+cfg = dict(cfg.items('postgresql'))
+driver = cfg.get('driver', '')
+host = cfg.get('host', 'localhost')
+database = cfg.get('database', 'postgres')
+password = cfg.get('password', '')
+user = cfg.get('user', 'postgres')
+port = cfg.get('port', '')
+
+SQLALCHEMY_DATABASE_URI = f"postgresql+{driver}://{user}:{password}@{host}{f':{port}' if port else ''}/{database}"
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
-HOST='localhost'
-DATABASE='uralgipromash'
-PASSWORD='UGM402'
-USER='postgres'
+
 
 WTF_CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
