@@ -1,3 +1,0 @@
-[submodule "uwsgi/ugm/postgreDB"]
-	path = uwsgi/ugm/postgreDB
-	url = git@github.com:Aleksandr644/postgreDB_practic.git
