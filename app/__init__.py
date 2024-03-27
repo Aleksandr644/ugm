@@ -1,5 +1,5 @@
 from flask import Flask
-from config import Config
+from config.config import Config
 
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy

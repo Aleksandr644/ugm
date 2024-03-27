@@ -7,7 +7,7 @@ class Config(object):
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 cfg = ConfigParser();
-with open('db.ini') as fl:
+with open('config/db.ini') as fl:
     cfg.read_file(fl)
 cfg = dict(cfg.items('postgresql'))
 driver = cfg.get('driver', '')
