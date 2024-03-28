@@ -10,7 +10,7 @@ csrf = CSRFProtect()
 app = Flask(__name__)
 app.config.from_object(Config)
 csrf.init_app(app)
-# db = SQLAlchemy(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-from app import routes # ! Обязательная строчка, без нее не подлкючаются виды, модели
-# from app import models # ! обязательная строка
+from app import routes, models # ! Обязательная строчка, без нее не подлкючаются виды, модели
