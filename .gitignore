@@ -6,3 +6,4 @@
 !.gitmodules
 db.ini
 **/db.ini
+migrations
