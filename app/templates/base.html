@@ -11,8 +11,13 @@
     </head>
     <body>
         <div>Уралгипромаш: 
-            <a href="{{ url_for('index') }}">Главная страница</a>|||
+            <a href="{{ url_for('index') }}">Главная страница</a>
+            {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}">Авторизация</a>
+            <a href="{{url_for('register')}}">Регистрация</a>
+            {% else %}
+            <a href="{{ url_for('logout') }}">Выход</a>
+            {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}

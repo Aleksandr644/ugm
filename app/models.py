@@ -1,11 +1,14 @@
 from typing import TYPE_CHECKING
 from app import db
 import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from app import login
 
 ROLE_ADMIN = 0;
 ROLE_USER = 1;
 
-class Person(db.Model):
+class Person(UserMixin, db.Model):
     """
     пользователи системы
     """
@@ -19,14 +22,19 @@ class Person(db.Model):
     email = db.Column(db.String(255)) # электронная почта
     role = db.Column(db.SmallInteger, default=ROLE_USER) # Права
     # realtionship
-    arrivals = db.relationship('Arrival', backref='responsible', lazy='dynamic')
-    expenses = db.relationship('Expense', backref='responsible', remote_side = 'id_person')
-    recipients = db.relationship('Expense', backref='recipient', remote_side = 'recipient')
+    #arrivals = db.relationship('Arrival', backref='responsible', lazy='dynamic')
+    #expenses = db.relationship('Expense', backref='responsible', remote_side = [id_person])
+    #recipients = db.relationship('Expense', backref='recipient', remote_side = [recipient])
     
     __table_args__ = ()
     
     def __repr__(self):
         return f"<User {self.login}>"
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 class Product(db.Model):
     """
@@ -42,8 +50,8 @@ class Product(db.Model):
     link = db.Column(db.String(255)) # ссылка на продукт
     id_category = db.Column(db.Integer, db.ForeignKey('category.id'))
     # relationship
-    arrivals = db.relationship('Arrival', backref='product')
-    expenses = db.relationship('Expense', backref='product')
+    #arrivals = db.relationship('Arrival', backref='product')
+    #expenses = db.relationship('Expense', backref='product')
     
     __table_args__ = ()
 
@@ -59,7 +67,7 @@ class Category(db.Model):
     name = db.Column(db.String(255), index=True) # Название категории
     description = db.Column(db.Text) # Описание категории
     #relationship
-    products = db.relationship('Product', backref='category')
+    #products = db.relationship('Product', backref='category')
     
     
     __table_args__ = ()
@@ -102,3 +110,7 @@ class Expense(db.Model):
     def __repr__(self):
         return f"<expense {self.date}>"
 # utcnow без вызова используеться для передачи функции и вызова на сервере при проведении записи
+
+@login.user_loader # регистрация загрузчика для работы с Flask_login
+def load_user(id): # ф-я для загрузки пользователя по идентификатору
+    return Person.query.get(int(id)) # запрос у БД пользователя по ID
