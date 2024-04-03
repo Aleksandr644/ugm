@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
-from app import db
+from app import db, login
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app import login
+from hashlib import md5
 
 ROLE_ADMIN = 0;
 ROLE_USER = 1;
@@ -21,6 +21,8 @@ class Person(UserMixin, db.Model):
     password = db.Column(db.String(255)) # пароль
     email = db.Column(db.String(255)) # электронная почта
     role = db.Column(db.SmallInteger, default=ROLE_USER) # Права
+    about_me = db.Column(db.Text)
+    last_seen = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     # realtionship
     #arrivals = db.relationship('Arrival', backref='responsible', lazy='dynamic')
     #expenses = db.relationship('Expense', backref='responsible', remote_side = [id_person])
@@ -35,6 +37,9 @@ class Person(UserMixin, db.Model):
         self.password = generate_password_hash(password)
     def check_password(self, password):
         return check_password_hash(self.password, password)
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'http://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
 class Product(db.Model):
     """
