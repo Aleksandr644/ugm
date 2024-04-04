@@ -30,3 +30,13 @@ class EditProfileForm(FlaskForm):
     full_name = StringField("Фамилия Имя Отчество", validators=[DataRequired()])
     about_me = TextAreaField('Обо мне', validators=[Length(min=0, max=255)])
     submit = SubmitField('Сохранить')
+    
+    def __init__(self, original_full_name, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        self.original_full_name = original_full_name
+        
+    def validate_full_name(self, full_name):
+        if full_name.data != self.original_full_name:
+            user = Person.query.filter_by(full_name=self.full_name.data).first()
+            if user is not None:
+                raise ValidationError("Пользователь с таким ФИО уже сущестует")
