@@ -1,0 +1,55 @@
+@import url("fonts.css");
+
+html{
+    font-family: 'Tilt Neon';
+    font-weight: normal;
+    background-color: lightgray;
+}
+
+body{
+    background-color: lightslategray;
+}
+
+header{
+    background-color: blue;
+}
+
+header > div{
+display: block;
+}
+
+#header-top{
+    display: flex;
+    background-color: lightgreen;
+    justify-content: space-between;
+}
+
+#header-top-left{
+    border: 1px solid black;
+}
+
+#header-top-center{
+    border: 1px solid black;
+}
+
+#header-top-center-top{
+
+}
+
+#header-top-center-top img{
+    min-width: 24px;
+    width: 50px;
+    margin: 1vw;
+}
+
+#header-top-right{
+    border: 1px solid black;
+}
+
+#header-bottom{
+    background-color: lightcoral;
+}
+
+footer{
+    background-color: lightgreen;
+}
