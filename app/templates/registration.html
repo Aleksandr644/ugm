@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="margin: 0 auto;text-align:center;">
+        <h1>Регистрация</h1>
+        <form action="" method="post" novalidate>            
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.username.label }}<br>
+                {{ form.username(size=64)}} <br>
+                {% for error in form.username.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.email.label }}<br>
+                {{ form.email(size=64)}} <br>
+                {% for error in form.email.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.password.label }}<br>
+                {{ form.password(size=64)}} <br>
+                {% for error in form.password.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.password2.label }}<br>
+                {{ form.password2(size=64)}} <br>
+                {% for error in form.password2.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <hr><br>    
+            <p>
+                {{ form.first_name.label }}<br>
+                {{ form.first_name(size=64)}} <br>
+                {% for error in form.first_name.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.last_name.label }}<br>
+                {{ form.last_name(size=64)}} <br>
+                {% for error in form.last_name.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.phone.label }}<br>
+                {{ form.phone(size=12)}} <br>
+                {% for error in form.phone.errors %}
+                    <span style="color: red;" >[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            {% if current_user.administrator %}
+                <p>{{ form.employee.label }} {{ form.employee()}}</p>
+                <p>{{ form.administrator.label }} {{ form.administrator()}}</p>
+            {% endif %}
+            <p>
+                {{ form.description.label }}<br>
+                {{ form.description()}} <br>
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </div>
+{% endblock %}

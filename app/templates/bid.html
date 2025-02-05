@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="margin: 0 auto;text-align:center;">
+    <div>Заявку создал <a href="{{url_for('user', id=user.id)}}">{{user.first_name}} {{user.last_name}}</a></div>
+    <hr>
+        <div>Текст:<br> {{bid.description}}</div>
+    <hr>
+    {%for comment in comments%}
+        {{comment.customer.first_name}} {{comment.customer.last_name}}({{moment(comment.date).format('D.MM.yy, hh:mm:ss')}}): {{comment.description}}<br>
+    {%endfor%}
+    <hr>
+    <form action="" method="post">
+        {{form.hidden_tag()}}
+        <p>{{form.text.label}} {{form.text(size=100)}}</p>
+        <p>{{form.submit()}}</p>
+    </form>
+</div>
+<div id="button_closed">
+{%if user == current_user or current_user.administrator %}
+    {%if bid.date_close == None %}
+        <a href="{{url_for('close', id=bid.id)}}" id="bid_closed"><p>Закрыть</p></a>
+    {% else %}
+        <a href="{{url_for('open', id=bid.id)}}" id="bid_closed"><p>Открыть</p></a>
+    {% endif %}
+{%endif%}
+</div>
+{% endblock %}
