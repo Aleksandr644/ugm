@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style=" margin: 0 auto;text-align:center;"> 
+    <H1>{{title}}</H1>
+    <p>Заявитель: {{current_user.first_name}} {{current_user.last_name}} {% if current_user.employee %} <span style="color: red;">СОТРУДНИК</span>{% endif %}</p>
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            <h3>{{form.description.label}}</h3>
+            {{form.description()}}<br>
+            {% for error in form.description.errors %}
+                <span style="color:red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <hr>
+        <P>{{ form.submit() }}
+            {% for error in form.submit.errors %}
+                <span style="color:red;">[{{ error }}]</span>
+            {% endfor %}
+        </P>
+    </form>
+</div>
+{% endblock %}

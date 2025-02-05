@@ -1,9 +1,6 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-    <h1>Hi, <i>{{user.nickname}}</i> !</h1>
-    {% if posts %}
-        {% for post in posts %}
-            <div><p>{{post.author.nickname}} says: <b>{{post.body}}</b></p></div>
-        {% endfor %}
-    {% endif %}
+<div style="display:flex; align-content: center; justify-content: center; overflow: auto;">
+    <img src="/static/img/новости.png" alt="">
+</div>
 {% endblock %}

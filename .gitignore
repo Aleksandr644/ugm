@@ -4,6 +4,9 @@
 
 !.gitignore
 !.gitmodules
+!.flaskenv
 db.ini
 **/db.ini
 migrations
+logs
+test*

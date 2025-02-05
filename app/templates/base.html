@@ -1,29 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" dir="ltr" class="no-js">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% if title %}
-        <title>{{title}}</title>
-        {% else %}
-        <title>Уралгипромаш</title>
-        {% endif %}
+        {% include 'base/_head.html' %}
     </head>
     <body>
-        <div>Уралгипромаш: 
-            <a href="{{ url_for('index') }}">Главная страница</a>|||
-            <a href="{{ url_for('login') }}">Авторизация</a>
-        </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
+        <header>
+            {% include 'base/_header.html' %}
+        </header>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        <footer>
+            {% include 'base/_footer.html' %}
+            <p id="Copyright"></p>
+            <script>
+                document.getElementById('Copyright').innerHTML = '&copy; 2023 - ' + new Date().getFullYear() + " by <a href='mailto:u9995844696@yandex.ru'>Aleksandr644 Ivanov</a>. All rights reserved."
+            </script>
+        </footer>
+        {{moment.include_moment()}}
     </body>
 </html>

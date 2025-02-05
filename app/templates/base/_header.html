@@ -1,0 +1,62 @@
+<!-- Блок хедера -->
+<div>
+    <!-- Верх хедера -->
+    <div id="header-top">
+        <div id="header-top-left" >
+            <img src="/static/img/logo_200x140.webp" alt="логотип Уралгипромаш" sizes="200x140">
+        </div>
+        <div id="header-top-center" >
+                <div>ООО НПФ Уралгипромаш</div>
+                <div id="header-top-center-top">
+                    Секретарь: <a href="tel:+73512669717">8 (351) 266-97-17</a>
+                </div>
+                <div id="header-top-center-center">
+                    Прием заявок: <a href="tel:+73512669728">8 (351) 266-97-28</a>
+                </div>
+                <div id="header-top-center-bottom">
+                    Эл.почта: <a href="mailto:npf@list.ru">npf@list.ru</a>
+                </div>
+                <div id="header-top-center-social">
+                    <a href="http://www.telegram.com"><img src="/static/img/TG_Logo.svg" alt="чат Телеграм"></a>
+                    <a href="http://www.vk.com"><img src="/static/img/VK_Logo.svg" alt="группа ВКонтакте"></a>
+                </div>
+        </div>
+        <div id="header-top-right" >
+            <!-- <a href="/about" id="header-top-right-signin"><p>О нас</p></a>
+            <a href="/signin" id="header-top-right-signin"><p>Заявки</p></a>
+            <a href="/signin" id="header-top-right-signin"><p>Личный кабинет</p></a>
+            <a href="/signin" id="header-top-right-signin"><p>Заявки</p></a> -->
+            {% for item in buttons %}
+                <a href="{{item.href}}" id="header-top-right-signin"><p>{{item.name}}</p></a>
+            {%endfor%}
+        </div>
+    </div>
+    <div id="header-bottom">
+        <hr>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <!-- Низ хедера 
+    <div id="header-bottom">
+        <nav>
+            <ul id="main-menu">
+                <li id="about">
+                    О КОМПАНИИ
+                </li>
+                <li id="request">
+                    ЗАЯВКИ
+                </li>
+                <li id="contacts">
+                    <a href="http://">Контакты</a>
+                </li>
+            </ul>
+        </nav>
+    </div> -->
+</div>

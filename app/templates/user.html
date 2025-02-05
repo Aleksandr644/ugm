@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="text-align:center; margin: 0 auto;">
+    <P>Страница пользователя {{user.first_name}} {{user.last_name}}</P>
+    <p>ID: {{user.id}}</p>
+    {%if user.administrator%}
+        <p style="color: red;">Сотрудник</p>
+    {%elif user.employee%}
+        <p style="color: red;">Администратор</p>
+    {%endif%}
+    <p>{{user.description}}</p>
+    <hr>
+    <p>Всего сделано заявок: {{bids_count}}</p>
+    <p>Из них открыто: {{bids_open}}</p>
+    <hr>
+    {% if current_user == user%}
+    <p><a href="/change_profile">Редактировать профиль</a></p>
+    <hr>
+    {% endif %}
+    <div style="overflow-x: auto;border: 1px solid rgb(0, 0, 0); height:100%;">
+        <table style="margin: auto;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Номер заявки</th>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Дата</th>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Закрыта</th>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Описание</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bid in bids %}
+                    <tr style="height: 20px;" onclick="window.location.href='/bid/{{bid.id}}';" onmouseover="this.style.backgroundColor='#adffff'" onmouseout="this.style.backgroundColor='#add8e6'">
+                        <td style="border: 1px solid rgb(0, 0, 0);width:100px;">{{bid.id}}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{{moment(bid.date).format('LL')}}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{% if bid.date_close != None %}{{moment(bid.date_close).format('LL')}}{% else %}<span style="color: red;">НЕТ</span>{% endif %}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);"><div style="position: relative;min-width:1000px;height:20px"><div style="white-space:nowrap;position:absolute;max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{bid.description}}</div></div></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if prev_url %}
+            <a href="{{ prev_url }}">Предыдущие</a>
+        {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}">Следующие</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

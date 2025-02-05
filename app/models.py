@@ -1,104 +1,82 @@
-from typing import TYPE_CHECKING
-from app import db
-import datetime
+from typing import Optional
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+from datetime import datetime, timezone
+from app import db, login
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-ROLE_ADMIN = 0;
-ROLE_USER = 1;
-
-class Person(db.Model):
-    """
-    пользователи системы
-    """
-    __tablename__ = 'person'
-    id = db.Column(db.Integer, primary_key = True)
-    full_name = db.Column(db.String(255)) # ФИО
-    position = db.Column(db.String(255)) # должность
-    birthday = db.Column(db.Date, default=datetime.date.today()) # день рождения
-    login = db.Column(db.String(25), index=True, unique=True, nullable=False) # логин
-    password = db.Column(db.String(255)) # пароль
-    email = db.Column(db.String(255)) # электронная почта
-    role = db.Column(db.SmallInteger, default=ROLE_USER) # Права
-    # realtionship
-    arrivals = db.relationship('Arrival', backref='responsible', lazy='dynamic')
-    expenses = db.relationship('Expense', backref='responsible', remote_side = 'id_person')
-    recipients = db.relationship('Expense', backref='recipient', remote_side = 'recipient')
+class Customers(db.Model, UserMixin):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    login: so.Mapped[str] = so.mapped_column(sa.String(64), unique=True)
+    password: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    email: so.Mapped[str] = so.mapped_column(sa.String(120), unique=True)
+    first_name: so.Mapped[str] = so.mapped_column(sa.String(64))
+    last_name: so.Mapped[str] = so.mapped_column(sa.String(64))
+    phone: so.Mapped[str] = so.mapped_column(sa.String(12))
+    employee: so.Mapped[bool] = so.mapped_column(sa.Boolean)
+    administrator: so.Mapped[bool] = so.mapped_column(sa.Boolean)
+    description: so.Mapped[str] = so.mapped_column(sa.Text)
+    bids: so.WriteOnlyMapped['Bids'] = so.relationship(back_populates='customer')
+    comments: so.WriteOnlyMapped['Comments'] = so.relationship(back_populates='customer')
+    products: so.WriteOnlyMapped['Logs_product'] = so.relationship(back_populates='customer')
     
-    __table_args__ = ()
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    
+    def check_password(self, password):
+        if self.password:
+            return check_password_hash(self.password, password)
+        else: return False
     
     def __repr__(self):
-        return f"<User {self.login}>"
+        return f''
 
-class Product(db.Model):
-    """
-    продукты
-    """
-    __tablename__ = "product"
-    id = db.Column(db.Integer, primary_key = True)
-    article = db.Column(db.String(100), unique=True, index=True) # артикул продукта
-    name = db.Column(db.String(255)) # название продукта
-    description = db.Column(db.Text) # описание продукта
-    volume = db.Column(db.Float) # вес продукта, количество шт в продукте, объем продукта и т.д.
-    unit = db.Column(db.String(30)) # единицы измерения продукта шт, литров, кг и т.д.
-    link = db.Column(db.String(255)) # ссылка на продукт
-    id_category = db.Column(db.Integer, db.ForeignKey('category.id'))
-    # relationship
-    arrivals = db.relationship('Arrival', backref='product')
-    expenses = db.relationship('Expense', backref='product')
+class Bids(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    customer_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Customers.id))
+    date: so.Mapped[datetime] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
+    date_close: so.Mapped[datetime] = so.mapped_column(sa.DateTime, nullable=True) 
+    description: so.Mapped[str] = so.mapped_column(sa.Text)
+    customer: so.Mapped['Customers'] = so.relationship(back_populates='bids')
     
-    __table_args__ = ()
+    def __repr__(self):
+        return f''
+
+class Comments(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    bid_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Bids.id))
+    customer_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Customers.id))
+    description: so.Mapped[str] = so.mapped_column(sa.Text)
+    date: so.Mapped[datetime] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
+    customer: so.Mapped['Customers'] = so.relationship(back_populates='comments')
+    
+    def __repr__(self):
+        return f''
+
+class Products(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(64))
+    description: so.Mapped[str] = so.mapped_column(sa.Text)
+    count: so.Mapped[int] = so.mapped_column(sa.Integer)
+    date: so.Mapped[datetime] = so.mapped_column(sa.DateTime, default=lambda:datetime.now(timezone.utc))
+    logs: so.WriteOnlyMapped['Logs_product'] = so.relationship( back_populates='product')
 
     def __repr__(self):
-        return f"<product {self.name}>"
+        return f''
 
-class Category(db.Model):
-    """
-    категории продуктов
-    """
-    __tablename__ = 'category'
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(255), index=True) # Название категории
-    description = db.Column(db.Text) # Описание категории
-    #relationship
-    products = db.relationship('Product', backref='category')
+class Logs_product(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    customer_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Customers.id))
+    product_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Products.id))
+    count: so.Mapped[int] = so.mapped_column(sa.Integer)
+    date: so.Mapped[datetime] = so.mapped_column(default=lambda:datetime.now(timezone.utc))
+    product: so.Mapped['Products'] = so.relationship(back_populates='logs')
+    customer: so.Mapped['Customers'] = so.relationship(back_populates='products')
     
-    
-    __table_args__ = ()
-
     def __repr__(self):
-        return f"<category {self.name}>"
+        return f''
 
-class Arrival(db.Model): 
-    """
-    поступление
-    """
-    __tablename__ = 'arrival'
-    id = db.Column(db.Integer, primary_key = True)
-    date = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow) # дата поступления
-    id_product = db.Column(db.Integer, db.ForeignKey('product.id')) # поступивший продукт
-    amount = db.Column(db.Integer, nullable=False) # колличество/позиций продукта
-    id_person = db.Column(db.Integer, db.ForeignKey('person.id')) # ответственный за запись
-    notes = db.Column(db.Text) # примечание
-    
-    __table_args__ = ()
-
-    def __repr__(self):
-        return f"<arrival {self.date}>"
-
-class Expense(db.Model): 
-    """
-    выдача
-    """
-    __tablename__ = 'expense'
-    id = db.Column(db.Integer, primary_key = True)
-    date = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow) # дата выдачи
-    id_product = db.Column(db.Integer, db.ForeignKey('product.id')) # выданный продукт
-    quantity = db.Column(db.Float) # колличество (шт, литров, кг)
-    recipient = db.Column(db.Integer, db.ForeignKey('person.id')) # получатель
-    id_person = db.Column(db.Integer, db.ForeignKey('person.id')) # ответственный
-    notes = db.Column(db.Text) # примечание
-    
-    __table_args__ = ()
-
-    def __repr__(self):
-        return f"<expense {self.date}>"
-# utcnow без вызова используеться для передачи функции и вызова на сервере при проведении записи
+@login.user_loader
+def load_user(id):
+    return db.session.get(Customers, int(id))

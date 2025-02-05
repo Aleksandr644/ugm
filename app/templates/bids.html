@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="margin: 0 auto;text-align:center;">
+    
+    <h1>Каталог заявок</h1>
+    <hr>
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>{{form.id.label}} {{form.id(size=10)}}</p>
+        <p>{{form.open.label}} {{form.open()}}</p>
+        <p>{{form.submit()}}</p>
+    </form>
+    <hr>
+    <div style="overflow-x: auto;border: 1px solid rgb(0, 0, 0); height:100%;">
+        <table style="margin: auto;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Номер заявки</th>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Дата</th>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Закрыта</th>
+                    <th style="border: 1px solid rgb(0, 0, 0);">Описание</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bid in bids %}
+                    <tr style="height: 20px;" onclick="window.location.href='/bid/{{bid.id}}';" onmouseover="this.style.backgroundColor='#adffff'" onmouseout="this.style.backgroundColor='#add8e6'">
+                        <td style="border: 1px solid rgb(0, 0, 0);width:100px;">{{bid.id}}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{{moment(bid.date).format('LL')}}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{% if bid.date_close != None %}{{moment(bid.date_close).format('LL')}}{% else %}<span style="color: red;">НЕТ</span>{% endif %}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);"><div style="position: relative;min-width:1000px;height:20px"><div style="white-space:nowrap;position:absolute;max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{bid.description}}</div></div></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if prev_url %}
+            <a href="{{ prev_url }}">Предыдущие</a>
+        {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}">Следующие</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
