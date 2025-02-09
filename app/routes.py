@@ -138,16 +138,16 @@ def bids():
         return redirect(url_for('bids'))
     button = create_buttons()
     bids  = db.session.query(Bids).order_by(sa.desc(Bids.id))
-    open_bids = request.args.get('open', 0, type=int)
-    if open_bids != 0:
+    r_open = request.args.get('open', 'False', type=str)
+    if r_open =='True':
+        flash('Только открытые')
         bids = bids.filter(Bids.date_close == None)
     date = request.args.get('date', 0,type=int)
-    page = request.args.get('page', 1, type=int)    
-    print(page, open_bids, date)
+    page = request.args.get('page', 1, type=int) 
     bids_page = db.paginate(bids, page=page, per_page=10, error_out=False)
-    next_url = url_for('bids', page=bids_page.next_num, open=open_bids) if bids_page.has_next else None
-    prev_url = url_for('bids', page=bids_page.prev_num, open=open_bids) if bids_page.has_prev else None
-    return render_template('bids.html', title=title, form=form, buttons=button, bids=bids_page.items, next_url=next_url, prev_url=prev_url,open=open_bids)
+    next_url = url_for('bids', page=bids_page.next_num, open=r_open) if bids_page.has_next else None
+    prev_url = url_for('bids', page=bids_page.prev_num, open=r_open) if bids_page.has_prev else None
+    return render_template('bids.html', title=title, form=form, buttons=button, bids=bids_page.items, next_url=next_url, prev_url=prev_url)
 
 # тело заявки
 @app.route('/bid/<id>', methods=['GET', 'POST'])
