@@ -4,9 +4,9 @@
     <P>Страница пользователя {{user.first_name}} {{user.last_name}}</P>
     <p>ID: {{user.id}}</p>
     {%if user.administrator%}
-        <p style="color: red;">Сотрудник</p>
-    {%elif user.employee%}
         <p style="color: red;">Администратор</p>
+    {%elif user.employee%}
+        <p style="color: red;">Сотрудник</p>
     {%endif%}
     <p>{{user.description}}</p>
     <hr>
