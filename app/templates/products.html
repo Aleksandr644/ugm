@@ -3,6 +3,12 @@
 <div style="margin: 0 auto;text-align:center;">
     <h1>Склад</h1>
     <hr>
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>{{form.name.label}} {{form.name(size=20)}}</p>
+        <p>{{form.submit()}}</p>
+    </form>
+    <hr>
     <div style="overflow-x: auto;border: 1px solid rgb(0, 0, 0); height:100%;">
         <table style="margin: auto;">
             <thead>

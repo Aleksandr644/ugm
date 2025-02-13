@@ -66,7 +66,5 @@ class ChangeForm(FlaskForm):
             raise ValidationError('Пожалуйста, введите другую электронную почту.')
 
 class ProductsForm(FlaskForm):
-    id = IntegerField('ID')
     name = StringField('Название')
-    description = StringField("Описание продукта")
-    submit = SubmitField("Изменить")
+    submit = SubmitField("Найти")

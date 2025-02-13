@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm, RegistrationForm, CreateBidForm, BidCommentForm, BidsForm, ChangeForm
+from app.forms import LoginForm, RegistrationForm, CreateBidForm, BidCommentForm, BidsForm, ChangeForm, ProductsForm
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import db
@@ -119,12 +119,19 @@ def user(id):
 def products():
     title = 'Склад'
     button = create_buttons()
-    product = db.session.query(Products).order_by(sa.desc(Products.id))
+    form = ProductsForm()
+    product = None
+    if form.validate_on_submit():
+        if form.name.data:
+            name = f'%{form.name.data}%'
+            product = db.session.query(Products).filter(Products.name.like(name))
+    if not product:
+        product = db.session.query(Products).order_by(sa.desc(Products.id))
     page = request.args.get('page', 1, type=int)
     product_page = db.paginate(product, page=page, per_page=10, error_out=False)
     next_url = url_for('products', page=product_page.next_num, ) if product_page.has_next else None
     prev_url = url_for('products', page=product_page.prev_num, ) if product_page.has_prev else None
-    return render_template('products.html', title=title, buttons=button, products=product_page.items, prev_url=prev_url, next_url=next_url)
+    return render_template('products.html', title=title, buttons=button, products=product_page.items, prev_url=prev_url, next_url=next_url, form=form)
 
 # каталог заявок
 @app.route('/bids', methods=['GET', 'POST'])
