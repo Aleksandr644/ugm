@@ -23,7 +23,7 @@
                 {% for product in products %}
                     <tr style="height: 20px;" onmouseover="this.style.backgroundColor='#adffff'" onmouseout="this.style.backgroundColor='#add8e6'">
                         <td style="border: 1px solid rgb(0, 0, 0);width:100px;">{{product.name}}</td>
-                        <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{{moment(product.date).format('LL')}}</td>
+                        <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{{moment(product.date, local=True).format("LLL")}}</td>
                         <td style="border: 1px solid rgb(0, 0, 0);width:200px;">{% if product.count != 0 %}{{product.count}}{% else %}<span style="color: red;">НЕТ</span>{% endif %}</td>
                         <td style="border: 1px solid rgb(0, 0, 0);">
                             <div style="position: relative;min-width:1000px;height:20px">
