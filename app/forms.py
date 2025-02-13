@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
     username = StringField('Login', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить вход?')
-    submit = SubmitField('Войти')
+    submit = SubmitField('Войти', render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
 
 class RegistrationForm(FlaskForm):
     username = StringField('Логин', validators=[DataRequired("Поле должно быть заполнено")])
@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
     employee = BooleanField("Работник", validators=[Optional()])
     administrator = BooleanField("Администратор", validators=[Optional()])
     description = TextAreaField("Дополнительная информация", validators=[Optional()])
-    submit = SubmitField('Готово')
+    submit = SubmitField('Готово', render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
     
     def validate_username(self, username):
         user = db.session.scalar(sa.select(Customers).where(Customers.login == username.data))
@@ -37,17 +37,17 @@ class RegistrationForm(FlaskForm):
 
 class CreateBidForm(FlaskForm):
     description = TextAreaField("Текст заявки", validators=[DataRequired('Поле должно быть заполнено')], render_kw={'style': 'height: 280px; width:500px;'})
-    submit = SubmitField('Отправить')
+    submit = SubmitField('Отправить', render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
 
 class BidCommentForm(FlaskForm):
     text = StringField("Комментировать")
-    submit = SubmitField('Отправить')
+    submit = SubmitField('Отправить', render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
     
 
 class BidsForm(FlaskForm):
     open = BooleanField("Только открытые")
     id = StringField("По номеру заявки")
-    submit = SubmitField("Поиск")
+    submit = SubmitField("Поиск", render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
     
 class ChangeForm(FlaskForm):
     email = StringField('Электронная почта', validators=[Optional(),Email("В поле должна быть электронная почта")])
@@ -58,7 +58,7 @@ class ChangeForm(FlaskForm):
     phone = TelField("Телефон", validators=[Regexp("^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$", message="должен быть номер телефона")])
     description = TextAreaField("Дополнительная информация", validators=[Optional()])
     password = PasswordField('Старый Пароль', validators=[DataRequired("Поле должно быть заполнено")])
-    submit = SubmitField('Сохранить')
+    submit = SubmitField('Сохранить', render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
         
     def validate_email(self, email):
         user = db.session.scalar(sa.select(Customers).where(Customers.email == email.data))
@@ -67,4 +67,4 @@ class ChangeForm(FlaskForm):
 
 class ProductsForm(FlaskForm):
     name = StringField('Название')
-    submit = SubmitField("Найти")
+    submit = SubmitField("Найти", render_kw={'id':"header-top-right-signin", 'style':"margin: auto;"})
