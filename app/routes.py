@@ -120,14 +120,15 @@ def products():
     title = 'Склад'
     button = create_buttons()
     form = ProductsForm()
-    product = None
+    product = None    
+    page = request.args.get('page', 1, type=int)
     if form.validate_on_submit():
         if form.name.data:
             name = f'%{form.name.data}%'
             product = db.session.query(Products).filter(Products.name.like(name))
+            page = 1
     if not product:
         product = db.session.query(Products).order_by(sa.desc(Products.id))
-    page = request.args.get('page', 1, type=int)
     product_page = db.paginate(product, page=page, per_page=10, error_out=False)
     next_url = url_for('products', page=product_page.next_num, ) if product_page.has_next else None
     prev_url = url_for('products', page=product_page.prev_num, ) if product_page.has_prev else None
