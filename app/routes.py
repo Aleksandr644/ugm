@@ -4,7 +4,7 @@ from app.forms import LoginForm, RegistrationForm, CreateBidForm, BidCommentForm
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import db
-from app.models import Customers, Bids, Comments
+from app.models import Customers, Bids, Comments, Products
 from flask import request
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
@@ -119,8 +119,12 @@ def user(id):
 def products():
     title = 'Склад'
     button = create_buttons()
-    
-    return render_template('products.html', title=title, buttons=button)
+    product = db.session.query(Products).order_by(sa.desc(Products.id))
+    page = request.args.get('page', 1, type=int)
+    product_page = db.paginate(product, page=page, per_page=10, error_out=False)
+    next_url = url_for('products', page=product_page.next_num, ) if product_page.has_next else None
+    prev_url = url_for('products', page=product_page.prev_num, ) if product_page.has_prev else None
+    return render_template('products.html', title=title, buttons=button, products=product_page.items, prev_url=prev_url, next_url=next_url)
 
 # каталог заявок
 @app.route('/bids', methods=['GET', 'POST'])
