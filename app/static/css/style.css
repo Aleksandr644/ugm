@@ -1,6 +1,7 @@
 @import url("fonts.css");
 
 * {
+    height: auto;
 }
 
 html{

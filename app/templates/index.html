@@ -1,6 +1,69 @@
 {% extends 'base.html' %}
 {% block content %}
 <div style="display:flex; align-content: center; justify-content: center; overflow: auto;">
-    <img src="/static/img/новости.png" alt="">
+    <div style="border: 0px solid black;display:flex;">
+        <div>
+            <h1>НОВОСТИ</h1>
+            <div  style="max-height:50vw; max-width:1200px; overflow-y:auto;word-break:break-all;">
+                {% include 'var/_news.html' %}
+            </div>
+        </div>
+        <div style="margin-left: 50px;">
+            <table style="border:2px solid black;">
+                <caption>Аварийные службы</caption>
+                <thead>
+                    <th>Название</th>
+                    <th>Телефон</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ПОВВ</td>
+                        <td>+7(351)217-00-77</td>
+                    </tr>
+                    <tr>
+                        <td>УСТЭК</td>
+                        <td>+7(351)775-15-92</td>
+                    </tr>
+                    <tr>
+                        <td>УЭС</td>
+                        <td>+7(351)775-10-08</td>
+                    </tr>
+                    <tr>
+                        <td>Лифт</td>
+                        <td>+7(351)772-82-57</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <br>
+            
+            <table style="border:2px solid black;">
+                <caption>Экстренные службы</caption>
+                <thead>
+                    <th>Название</th>
+                    <th>Телефон</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Пожарные</td>
+                        <td>101</td>
+                    </tr>
+                    <tr>
+                        <td>Полиция</td>
+                        <td>102</td>
+                    </tr>
+                    <tr>
+                        <td>Скорая помощь</td>
+                        <td>103</td>
+                    </tr>
+                    <tr>
+                        <td>Газовая служба</td>
+                        <td>104</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}
