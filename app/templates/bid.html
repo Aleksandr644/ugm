@@ -6,7 +6,7 @@
         <div>Текст:<br> {{bid.description}}</div>
     <hr>
     {%for comment in comments%}
-        {{comment.customer.first_name}} {{comment.customer.last_name}}({{moment(comment.date, local=True).format("LLL")}}): {{comment.description}}<br>
+        <a href="{{url_for('user', id=comment.customer.id)}}">{{comment.customer.first_name}} {{comment.customer.last_name}}</a>({{moment(comment.date, local=True).format("LLL")}}): {{comment.description}}<br>
     {%endfor%}
     <hr>
     <form action="" method="post">
